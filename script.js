@@ -7,6 +7,7 @@ let countVerde = 0;
 const connectBtn = document.getElementById('connect');
 const ledRojoBtn = document.getElementById('ledRojo');
 const ledVerdeBtn = document.getElementById('ledVerde');
+const ledsAmbosBtn = document.getElementById('ledsAmbos');
 const parpadeoBtn = document.getElementById('parpadeo');
 const ventiladorBtn = document.getElementById('ventilador');
 
@@ -87,6 +88,20 @@ ledVerdeBtn.addEventListener('click', async () => {
         ledVerdeBtn.classList.remove('off');
         ledVerdeBtn.classList.add('on');
         ledVerdeBtn.innerText = "Encender LED Verde";
+    }
+});
+
+ledsAmbosBtn.addEventListener('click', async () => {
+    await enviarComando("ambos");
+    
+    if (ledsAmbosBtn.classList.contains('on')) {
+        ledsAmbosBtn.classList.remove('on');
+        ledsAmbosBtn.classList.add('off');
+        ledsAmbosBtn.innerText = "Apagar ambos LEDs";
+    } else {
+        ledsAmbosBtn.classList.remove('off');
+        ledsAmbosBtn.classList.add('on');
+        ledsAmbosBtn.innerText = "Encender ambos LEDs";
     }
 });
 
