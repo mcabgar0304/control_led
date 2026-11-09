@@ -36,9 +36,9 @@ button {
 }
 
 button:disabled {
-    background-color: #e0e0e0;
-    color: #888888;
-    opacity: 1 ;
+    background-color: #d6d6d6 !important;
+    color: #555555 !important;
+    opacity: 1 !important;
     cursor: not-allowed;
 }
 
