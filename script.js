@@ -34,6 +34,7 @@ connectBtn.addEventListener('click', async () => {
     await sleep(1500);
     ledRojoBtn.disabled = false;
     ledVerdeBtn.disabled = false;
+    ledsAmbosBtn.disabled = false;
     parpadeoBtn.disabled = false;
     ventiladorBtn.disabled = false;
 
