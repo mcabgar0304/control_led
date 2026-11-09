@@ -1,69 +1,135 @@
 let port;
 let writer;
 
+let countRojo = 0;
+let countVerde = 0;
+
 const connectBtn = document.getElementById('connect');
-const onBtn = document.getElementById('on');
-const offBtn = document.getElementById('off');
-const alertBox = document.getElementById('alert-box');
+const ledRojoBtn = document.getElementById('ledRojo');
+const ledVerdeBtn = document.getElementById('ledVerde');
+const parpadeoBtn = document.getElementById('parpadeo');
+const ventiladorBtn = document.getElementById('ventilador');
+
+const contadorRojo = document.getElementById('contadorRojo');
+const contadorVerde = document.getElementById('contadorVerde');
+
+// --- NUEVO: Elementos del slider PWM ---
+const pwmSlider = document.getElementById('pwmSlider');
+const pwmValue = document.getElementById('pwmValue');
 
 // 1. Conectar al puerto Serial al hacer clic
 connectBtn.addEventListener('click', async () => {
+
     // Solicitar al navegador el puerto USB del Arduino
     port = await navigator.serial.requestPort();
     await port.open({ baudRate: 9600 });
 
-    // Obtener el escritor para enviar datos
+    // Obtener el escritor para enviar datos de texto
     writer = port.writable.getWriter();
 
     connectBtn.disabled = true;
     connectBtn.innerText = "Conectado";
-    onBtn.disabled = false;
-    offBtn.disabled = false;
 
-    readSerialData();
+    await sleep(1500);
+    ledRojoBtn.disabled = false;
+    ledVerdeBtn.disabled = false;
+    parpadeoBtn.disabled = false;
+    ventiladorBtn.disabled = false;
+
+    // --- NUEVO: Habilitar el slider al conectar ---
+    if (pwmSlider) pwmSlider.disabled = false;
 });
 
-// 2. Enviar '1' para encender el LED
-onBtn.addEventListener('click', async () => {
+// Función general para enviar comandos de texto al Arduino
+async function enviarComando(comando) {
     if (writer) {
-        const data = new Uint8Array([49]); // Código ASCII para '1'
-        await writer.write(data);
+        // Creamos un codificador para convertir texto en bytes e incluimos un salto de línea (\n)
+        const encoder = new TextEncoder();
+        await writer.write(encoder.encode(comando + "\n"));
+        console.log("Comando enviado: " + comando);
+    } else {
+        alert("Primero debes conectar el Arduino.");
+    }
+}
+
+// Botón Encender LED ROJO
+ledRojoBtn.addEventListener('click', async () => {
+    await enviarComando("ledrojo");
+    if (ledRojoBtn.classList.contains('on')) {
+        // Si estaba encendido, lo pasamos a apagado
+        ledRojoBtn.classList.remove('on');
+        ledRojoBtn.classList.add('off');
+        ledRojoBtn.innerText = "Apagar LED Rojo";
+
+        countRojo++; // Sumamos 1 al contador
+        contadorRojo.innerText = `Contador LED Rojo: ${countRojo}`;
+    } else {
+        // Si estaba apagado, lo pasamos a encendido
+        ledRojoBtn.classList.remove('off');
+        ledRojoBtn.classList.add('on');
+        ledRojoBtn.innerText = "Encender LED Rojo";
     }
 });
 
-// 3. Enviar '0' para apagar el LED
-offBtn.addEventListener('click', async () => {
-    if (writer) {
-        const data = new Uint8Array([48]); // Código ASCII para '0'
-        await writer.write(data);
+// Botón Encender LED VERDE
+ledVerdeBtn.addEventListener('click', async () => {
+    await enviarComando("ledverde");
+    if (ledVerdeBtn.classList.contains('on')) {
+        // Si estaba encendido, lo pasamos a apagado
+        ledVerdeBtn.classList.remove('on');
+        ledVerdeBtn.classList.add('off');
+        ledVerdeBtn.innerText = "Apagar LED Verde";
+
+        countVerde++; // Sumamos 1 al contador
+        contadorVerde.innerText = `Contador LED Verde: ${countVerde}`;
+    } else {
+        // Si estaba apagado, lo pasamos a encendido
+        ledVerdeBtn.classList.remove('off');
+        ledVerdeBtn.classList.add('on');
+        ledVerdeBtn.innerText = "Encender LED Verde";
     }
 });
 
-// 3. Función para leer continuamente los mensajes del Arduino (Sensor)
-async function readSerialData() {
-    const textDecoder = new TextDecoderStream();
-    port.readable.pipeTo(textDecoder.writable);
-    const reader = textDecoder.readable.getReader();
+parpadeoBtn.addEventListener('click', async () => {
+    await enviarComando("parpadear");
+    if (parpadeoBtn.classList.contains('on')) {
+        // Si estaba encendido, lo pasamos a apagado
+        parpadeoBtn.classList.remove('on');
+        parpadeoBtn.classList.add('off');
+        parpadeoBtn.innerText = "Apagar parpadeo";
+    } else {
+        // Si estaba apagado, lo pasamos a encendido
+        parpadeoBtn.classList.remove('off');
+        parpadeoBtn.classList.add('on');
+        parpadeoBtn.innerText = "Encender parpadeo";
+    }
+});
 
-    let buffer = "";
+ventiladorBtn.addEventListener('click', async () => {
+    await enviarComando("ventilador");
+    if (ventiladorBtn.classList.contains('on')) {
+        // Si estaba encendido, lo pasamos a apagado
+        ventiladorBtn.classList.remove('on');
+        ventiladorBtn.classList.add('off');
+        ventiladorBtn.innerText = "Apagar ventilador";
+    } else {
+        // Si estaba apagado, lo pasamos a encendido
+        ventiladorBtn.classList.remove('off');
+        ventiladorBtn.classList.add('on');
+        ventiladorBtn.innerText = "Encender ventilador";
+    }
+});
 
-        while (true) {
-            const { value, done } = await reader.read();
-            if (done) break;
-            
-            buffer += value;
-            let lines = buffer.split("\n");
-            buffer = lines.pop(); // Guarda fragmentos incompletos para el siguiente ciclo
+if (pwmSlider) {
+    pwmSlider.addEventListener('input', async () => {
+        let valor = pwmSlider.value;
+        if (pwmValue) pwmValue.innerText = valor; // Actualiza el número en pantalla
 
-            for (let line of lines) {
-                let cleanLine = line.trim();
+        // Envía el comando con formato "pwm:VALOR" (ej: pwm:150)
+        await enviarComando("pwm:" + valor);
+    });
+}
 
-                // Evaluamos el texto enviado por el Arduino
-                if (cleanLine === "OBJETO_CERCA") {
-                    alertBox.classList.remove('hidden'); // Muestra el aviso rojo
-                } else if (cleanLine === "OBJETO_LEJOS") {
-                    alertBox.classList.add('hidden');    // Oculta el aviso
-                }
-            }
-        }
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }

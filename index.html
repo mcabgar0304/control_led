@@ -15,9 +15,30 @@
     <div class="card">
         <button id="connect">Conectar Arduino</button>
         <br><br>
-        <button id="on" disabled>Encender LED</button>
-        <button id="off" disabled>Apagar LED</button>
+        <button class="on" id="ledRojo" disabled>Encender LED Rojo</button><br>
+        <p id="contadorRojo">Contador LED Rojo: 0</p>
+
+        <button class="on" id="ledVerde" disabled>Encender LED Verde</button><br>
+        <p id="contadorVerde">Contador LED Verde: 0</p>
+
+        <label for="pwmSlider">Luminosidad LEDs: <span id="pwmValue">5</span></label><br>
+        <input type="range" id="pwmSlider" min="1" max="10" value="5" disabled><br><br>
+
+        <button class="on" id="parpadeo" disabled>Encender parpadeo</button><br>
+        <button class="on" id="ventilador" disabled>Encender ventilador</button><br>
     </div>
+
+    <footer>
+        <div style="margin-top: 30px; text-align: center;">
+            <p style="margin: 0; font-weight: bold; font-size: 16px;">Marcos Cabello García</p>
+            <div style="width: 60px; display: inline-block; vertical-align: middle; margin-top: 10px;">
+                <div class="tenor-gif-embed" data-postid="12352186724248149394" data-share-method="host" data-aspect-ratio="1" data-width="100%">
+                    <a href="https://tenor.com/view/sea-lion-gif-12352186724248149394">Sea Lion GIF</a> from <a href="https://tenor.com/search/sea+lion-gifs">Sea Lion GIFs</a>
+                </div>
+                <script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+            </div>
+        </div>
+    </footer>
 
     <script src="script.js"></script>
 </body>

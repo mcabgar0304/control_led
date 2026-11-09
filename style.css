@@ -27,11 +27,11 @@ button {
     background-color: #008CBA;
 }
 
-#on {
+.on {
     background-color: #4CAF50;
 }
 
-#off {
+.off {
     background-color: #f44336;
 }
 
@@ -51,4 +51,17 @@ button:disabled {
 /* Clase para ocultar elementos web */
 .hidden {
     display: none;
+}
+
+
+label {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="range"] {
+    width: 80%;
+    margin: 10px 0;
+    cursor: pointer;
 }
