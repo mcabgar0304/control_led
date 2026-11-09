@@ -1,0 +1,54 @@
+body {
+    text-align: center;
+    margin-top: 200px;
+    background-color: #f4f4f9;
+}
+
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    display: inline-block;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+button {
+    padding: 12px 25px;
+    font-size: 16px;
+    margin: 10px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+}
+
+#connect {
+    background-color: #008CBA;
+}
+
+#on {
+    background-color: #4CAF50;
+}
+
+#off {
+    background-color: #f44336;
+}
+
+button:disabled {
+    cursor: not-allowed;
+}
+
+/* Estilos para la caja de alerta del sensor */
+#alert-box {
+    margin-top: 20px;
+    padding: 15px;
+    color: black;
+    font-weight: bold;
+    font-size: 30px;
+}
+
+/* Clase para ocultar elementos web */
+.hidden {
+    display: none;
+}
